@@ -6,9 +6,9 @@ import java.util.function.BinaryOperator;
 
 public enum Operator {
     PLUS("+", Double::sum),
-    MINUS("-", (x, y) -> Double.valueOf(x - y)),
-    DIVIDE("/", (x, y) -> Double.valueOf(x / y)),
-    MULTIPLY("*", (x, y) -> Double.valueOf(x * y));
+    MINUS("-", (x, y) -> x - y),
+    DIVIDE("/", (x, y) -> x / y),
+    MULTIPLY("*", (x, y) -> x * y);
 
     private static final Map<String, Operator> lookup =
             Map.of(PLUS.operator, PLUS, MINUS.operator, MINUS, DIVIDE.operator, DIVIDE, MULTIPLY.operator, MULTIPLY);
