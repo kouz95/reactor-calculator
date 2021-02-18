@@ -1,30 +1,32 @@
 package domain.model;
 
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.function.BinaryOperator;
 
 public enum Operator {
-    PLUS("+"),
-    MINUS("-"),
-    DIVIDE("/"),
-    MULTIPLY("*");
+    PLUS("+", Double::sum),
+    MINUS("-", (x, y) -> Double.valueOf(x - y)),
+    DIVIDE("/", (x, y) -> Double.valueOf(x / y)),
+    MULTIPLY("*", (x, y) -> Double.valueOf(x * y));
 
     private static final Map<String, Operator> lookup =
             Map.of(PLUS.operator, PLUS, MINUS.operator, MINUS, DIVIDE.operator, DIVIDE, MULTIPLY.operator, MULTIPLY);
 
     private final String operator;
+    private final BinaryOperator<Double> calculate;
 
-    Operator(String operator) {
+    Operator(String operator, BinaryOperator<Double> calculate) {
         this.operator = operator;
+        this.calculate = calculate;
     }
 
     public static Operator from(String operator) {
         return Optional.ofNullable(lookup.get(operator))
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 Operator"));
+    }
+
+    public double operate(double x, double y) {
+        return calculate.apply(x, y);
     }
 }
